@@ -1,52 +1,101 @@
 ﻿using System;
+using MultiplayerClient.Extensions;
+using MultiplayerClient.Hosting;
+using MultiplayerClient.Proxy;
+using MultiplayerContracts;
 
 namespace MultiplayerClient
 {
     class Program
     {
+        private static Shell _shell;
+
         static void Main(string[] args)
         {
-            Console.WriteLine("Type your (nick)name:");
-            var player = Console.ReadLine();
+            _shell = new Shell();
+            var host = new Host(_shell);
+
+            int intPort;
+
+            _shell.WriteLine("Type your (nick)name:");
+            var player = _shell.ReadLine();
+
+            _shell.WriteLine("Will you be hosting ? (y/n)");
+            var iAmHost = _shell.ReadKey();
+            _shell.WriteLine();
+
+            if (iAmHost.Key == ConsoleKey.Y)
+            {
+                intPort = host.Start(player);
+            }
+            else
+            {
+                _shell.WriteLine("enter a port number to join (empty will default to 8000):");
+                intPort = _shell.ReadInt(8000);
+            }
 
             try
             {
-                var service = new MultiplayerProxy("192.168.1.51", "8000");
+                var service = new MultiplayerProxy("192.168.1.51", intPort.ToString("0"));
                 service.ChatMessageReceived += ChatMessageReceived;
 
-                var token = service.Join(player);
-                while (string.IsNullOrEmpty(token))
+                var token = TryJoin(service, player);
+                if (!string.IsNullOrWhiteSpace(token))
                 {
-                    Console.WriteLine("(nick)name {0} was already taken", player);
-                    Console.WriteLine("pick another one:");
-                    player = Console.ReadLine();
-                    token = service.Join(player);
+                    _shell.WriteLine();
+                    _shell.WriteLine("Welcome to the lobby, {0} !", player);
+                    _shell.WriteLine();
+
+                    var input = _shell.ReadLine() ?? "";
+                    while (input.ToLower() != "exit")
+                    {
+                        service.SendChatMessage(token, input);
+
+                        input = _shell.ReadLine() ?? "";
+                    }
+
+                    service.SendChatMessage(token, "has left the building");
                 }
-
-                Console.WriteLine();
-                Console.WriteLine("Welcome to the lobby, {0} !", player);
-                Console.WriteLine();
-
-                var input = Console.ReadLine() ?? "";
-                while (input.ToLower() != "exit")
-                {
-                    service.SendChatMessage(token, input);
-
-                    input = Console.ReadLine() ?? "";
-                }
-
-                service.SendChatMessage(token, "has left the building");
-
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                _shell.WriteLine(ex.ToString());
+            }
+            finally
+            {
+                if (iAmHost.Key == ConsoleKey.Y)
+                {
+                    host.Stop();
+                }
+            }
+            _shell.WriteLine("Press any key to exit");
+            _shell.ReadLine();
+        }
+
+        private static string TryJoin(IMultiplayerService service, string player)
+        {
+            try
+            {
+                var token = service.Join(player);
+                while (string.IsNullOrEmpty(token))
+                {
+                    _shell.WriteLine("(nick)name {0} was already taken", player);
+                    _shell.WriteLine("pick another one:");
+                    player = _shell.ReadLine();
+                    token = service.Join(player);
+                }
+                return token;
+            }
+            catch (Exception)
+            {
+                _shell.WriteLine("it appears that no service is listening on the port you provided");
+                return null;
             }
         }
 
         static void ChatMessageReceived(string player, string message)
         {
-            Console.WriteLine("{0}> {1}", player, message);
+            _shell.WriteLine("{0}> {1}", player, message);
         }
     }
 }

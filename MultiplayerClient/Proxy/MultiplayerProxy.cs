@@ -3,7 +3,7 @@ using System.ServiceModel;
 using MultiplayerClient.Extensions;
 using MultiplayerContracts;
 
-namespace MultiplayerClient
+namespace MultiplayerClient.Proxy
 {
     public class MultiplayerProxy : IMultiplayerService
     {
