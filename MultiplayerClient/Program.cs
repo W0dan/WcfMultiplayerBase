@@ -13,7 +13,7 @@ namespace MultiplayerClient
         static void Main(string[] args)
         {
             _shell = new Shell();
-            var host = new Host(_shell);
+            var host = new Host();
 
             int intPort;
 
@@ -26,7 +26,12 @@ namespace MultiplayerClient
 
             if (iAmHost.Key == ConsoleKey.Y)
             {
-                intPort = host.Start(player);
+                _shell.WriteLine("enter a port number to host (empty will default to 8000):");
+                intPort = _shell.ReadInt(8000);
+
+                host.Start(player, intPort);
+
+                _shell.WriteLine("hosting on port {0} by player {1}", intPort, player);
             }
             else
             {
@@ -65,7 +70,14 @@ namespace MultiplayerClient
             {
                 if (iAmHost.Key == ConsoleKey.Y)
                 {
-                    host.Stop();
+                    try
+                    {
+                        host.Stop();
+                    }
+                    catch (Exception ex)
+                    {
+                        _shell.WriteLine("An error occured: {0}", ex);
+                    }
                 }
             }
             _shell.WriteLine("Press any key to exit");
