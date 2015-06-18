@@ -1,6 +1,6 @@
 ﻿using System;
+using MultiplayerClient.Contracts;
 using MultiplayerClient.Extensions;
-using MultiplayerContracts;
 
 namespace MultiplayerClient
 {

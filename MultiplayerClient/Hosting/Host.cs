@@ -2,9 +2,9 @@
 using System.ServiceModel;
 using System.Threading;
 using System.Threading.Tasks;
+using MultiplayerClient.Contracts;
 using MultiplayerClient.Extensions;
-using MultiplayerContracts;
-using MultiplayerServer;
+using MultiplayerClient.Server;
 
 namespace MultiplayerClient.Hosting
 {

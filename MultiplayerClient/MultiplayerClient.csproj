@@ -43,25 +43,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CallbackService.cs" />
+    <Compile Include="Contracts\IMultiplayerService.cs" />
+    <Compile Include="Contracts\IPlayerCallback.cs" />
     <Compile Include="Extensions\ActionExtensions.cs" />
     <Compile Include="Extensions\Shell.cs" />
     <Compile Include="Hosting\Host.cs" />
     <Compile Include="Proxy\MultiplayerProxy.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Server\MultiplayerService.cs" />
+    <Compile Include="Server\Subscriber.cs" />
+    <Compile Include="Server\SubscriberCollection.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\MultiplayerContracts\MultiplayerContracts.csproj">
-      <Project>{581de4e7-8b4a-4113-8e52-5de3933a9e2c}</Project>
-      <Name>MultiplayerContracts</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\MultiplayerServer\MultiplayerServer.csproj">
-      <Project>{747b4461-cba2-4024-9277-95d4ac211814}</Project>
-      <Name>MultiplayerServer</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,8 +1,8 @@
 ﻿using System;
+using MultiplayerClient.Contracts;
 using MultiplayerClient.Extensions;
 using MultiplayerClient.Hosting;
 using MultiplayerClient.Proxy;
-using MultiplayerContracts;
 
 namespace MultiplayerClient
 {

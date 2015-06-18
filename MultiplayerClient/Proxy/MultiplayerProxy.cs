@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ServiceModel;
+using MultiplayerClient.Contracts;
 using MultiplayerClient.Extensions;
-using MultiplayerContracts;
 
 namespace MultiplayerClient.Proxy
 {
